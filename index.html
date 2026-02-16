@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Padayon Portal | Engr. HUD v7.0</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@500;700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body class="min-h-screen">
+
+    <div id="login-page">
+        <div class="modern-card">
+            <div class="card-left">
+                <div class="content-left">
+                    <h1 class="welcome-title">Welcome Future Engineer</h1>
+                    <p class="welcome-sub">Prepare for your board exam with our advanced simulation portal.</p>
+                </div>
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+
+            <div class="card-right">
+                <h2 class="login-header">USER LOGIN</h2>
+                <form class="modern-form" onsubmit="event.preventDefault(); verifyLogin()">
+                    <div class="input-wrap">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="username" class="modern-input" placeholder="Username">
+                    </div>
+                    <div class="input-wrap">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="password" class="modern-input" placeholder="Password">
+                    </div>
+                    <div class="form-footer">
+                        <label class="remember-me flex items-center gap-2">
+                            <input id="remember-me" type="checkbox"> Remember
+                        </label>
+                        <span id="forgot-pass" class="forgot-pass">Forgot password?</span>
+                    </div>
+                    <button type="submit" class="modern-login-btn">LOGIN</button>
+                    <p id="login-msg" class="text-red-500 text-xs mt-4 text-center hidden font-bold">INVALID CREDENTIALS</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORGOT PASSWORD MODAL (opens mail app to contact admin) -->
+    <div id="forgot-modal" class="hidden fixed inset-0 z-[10060] flex items-center justify-center bg-black/70 p-4">
+        <div class="cyber-card w-full max-w-md p-6 rounded-lg border border-gray-700 bg-black/80">
+            <div class="flex items-center justify-between gap-3 mb-3">
+                <div class="font-bold tracking-widest text-white">FORGOT PASSWORD</div>
+                <button id="forgot-close" class="text-gray-400 hover:text-white font-mono text-sm">✕</button>
+            </div>
+            <div class="text-xs font-mono text-gray-400 mb-4">
+                Enter your username and the last password you remember. This will open your email app to request help from the admin.
+            </div>
+
+            <div class="space-y-3">
+                <input id="forgot-username" class="w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Username">
+                <input id="forgot-lastpass" class="w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Last password you remember">
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-4">
+                <button id="forgot-send" class="px-4 py-2 rounded bg-[#00f3ff] hover:bg-[#00c2cc] text-black font-bold text-xs tracking-widest">EMAIL ADMIN</button>
+                <button id="forgot-cancel" class="px-4 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">CANCEL</button>
+            </div>
+            <div id="forgot-msg" class="mt-3 text-xs font-mono text-gray-400"></div>
+        </div>
+    </div>
+
+    <div id="landing-page" class="hidden">
+        <div class="glitch-text">WELCOME<br>FUTURE ENGINEER</div>
+        <p class="text-gray-400 mt-4 font-mono tracking-widest text-xs md:text-sm text-center px-4" style="animation: popIn 0.8s ease 0.3s forwards; opacity: 0;">SYSTEM PREPARING MODULES...</p>
+        <button class="start-btn" onclick="goToLevel1()">INITIALIZE SYSTEM</button>
+    </div>
+
+    <div id="level-1-menu" class="menu-overlay hidden">
+        <h2 class="menu-header">SELECT CATEGORY</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-5xl px-4 pb-20">
+            <div onclick="goToLevel2('undergrounds')" class="cyber-card group cursor-pointer p-6 rounded-xl text-center animate-pop">
+                <div class="text-4xl mb-4 group-hover:text-[#00f3ff] transition-colors">🚇</div>
+                <h3 class="text-xl font-bold text-white tracking-widest">UNDERGROUNDS</h3>
+                <p class="text-gray-500 text-xs font-mono mt-2">Fundamental Concepts</p>
+            </div>
+            <div onclick="goToLevel2('taypi')" class="cyber-card group cursor-pointer p-6 rounded-xl text-center animate-pop delay-100">
+                <div class="text-4xl mb-4 group-hover:text-[#ff00ff] transition-colors">🏛️</div>
+                <h3 class="text-xl font-bold text-white tracking-widest">T-AY-PI</h3>
+                <p class="text-gray-500 text-xs font-mono mt-2">Board Exam Simulation</p>
+            </div>
+            <div onclick="goToLevel2('exhale')" class="cyber-card group cursor-pointer p-6 rounded-xl text-center animate-pop delay-200">
+                <div class="text-4xl mb-4 group-hover:text-[#00ff9d] transition-colors">😤</div>
+                <h3 class="text-xl font-bold text-white tracking-widest">EXHALE FILE</h3>
+                <p class="text-gray-500 text-xs font-mono mt-2">Deep Dive Analysis</p>
+            </div>
+            <div onclick="goToLevel2('pawer')" class="cyber-card group cursor-pointer p-6 rounded-xl text-center animate-pop delay-300">
+                <div class="text-4xl mb-4 group-hover:text-[#ff0055] transition-colors">⚡</div>
+                <h3 class="text-xl font-bold text-white tracking-widest">PAWER-LAYN FILE</h3>
+                <p class="text-gray-500 text-xs font-mono mt-2">Power Systems & Grid</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="submenu-undergrounds" class="menu-overlay hidden">
+        <button onclick="backToLevel1()" class="back-btn">← BACK</button>
+        <h2 class="menu-header text-[#00f3ff] mt-12 md:mt-0">UNDERGROUNDS MODULES</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl px-4 pb-20">
+            
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES')">
+                <div class="text-3xl mb-2">📚</div>
+                <div class="font-bold text-sm">TERMS & OBJECTIVES</div>
+            </div>
+
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-100" onclick="openContent('UNDERGROUNDS/FORMULAS')">
+                <div class="text-3xl mb-2">∫dx</div>
+                <div class="font-bold text-sm">FORMULAS</div>
+            </div>
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-200" onclick="goToLevel3('PROBLEM EXERCISES')">
+                <div class="text-3xl mb-2">✍️</div>
+                <div class="font-bold text-sm">PROBLEM EXERCISES</div>
+            </div>
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-300" onclick="openContent('UNDERGROUNDS/CALCULATOR TECHNIQUES')">
+                <div class="text-3xl mb-2">🖩</div>
+                <div class="font-bold text-sm">CALCULATOR TECHNIQUE</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="submenu-terms" class="menu-overlay hidden flex flex-col justify-center items-center">
+    
+    <div class="w-full max-w-3xl mx-auto pt-12 md:pt-0 px-6 relative mb-6 text-center shrink-0">
+        <button onclick="closeTermsMenu()" class="back-btn static md:absolute md:left-0 md:top-1 mb-4 md:mb-0">← BACK</button>
+        <h2 class="menu-header text-[#00f3ff] inline-block m-0">ARCHIVES DATABASE</h2>
+        </div>
+
+        <div class="w-full max-w-3xl h-[70vh] overflow-y-auto px-4 pb-20 hide-scrollbar">
+            
+            <div class="flex flex-col gap-4">
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/ESAS PAST BOARD (UG)')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">Esas Past Board (UG)</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Access Archived Exam Sets</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/MATH SUBJECTS')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">Math Subjects</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Calculus, Algebra, & Probability</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/EE PAST BOARD (UG)')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">EE Past Board (UG)</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Previous Licensure Examinations</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/EE PRE BOARD (UG)')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">EE Pre Board (UG)</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Mock Board Examinations</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/EE DC CIRCUITS')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">EE DC Circuits</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Ohm's Law, Network Theorems</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/EE DC MACHINES')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">EE DC Machines</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Motors & Generators</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/EE AC SINGLE-PHASE')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">EE AC Single-Phase</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">R-L-C Series & Parallel</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+                <div class="cyber-card w-full p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:border-[#00f3ff] transition-all duration-200 hover:bg-[#1a1a24] group" onclick="openContent('UNDERGROUNDS/TERMS & OBJECTIVES/EE AC THREE-PHASE')">
+                    <div class="text-4xl text-[#00f3ff] bg-gray-900/50 p-3 rounded-lg group-hover:scale-110 transition-transform">📂</div>
+                    <div class="text-left flex-1">
+                        <div class="font-bold text-xl text-white group-hover:text-[#00f3ff] transition-colors">EE AC Three-Phase</div>
+                        <p class="text-gray-500 text-xs font-mono mt-1">Polyphase Systems</p>
+                    </div>
+                    <div class="text-gray-600 text-xl group-hover:text-white transition-colors">➔</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="submenu-past-board-list" class="menu-overlay hidden">
+        <button onclick="closePastBoardList()" class="back-btn">← BACK</button>
+        <h2 class="menu-header text-[#00f3ff] mt-12 md:mt-0">SELECT EXAM SET</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl px-4 pb-20">
+            <div class="cyber-card p-8 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop" onclick="loadQuiz('ug1')">
+                <div class="text-4xl mb-4 text-[#00f3ff]">📜</div>
+                <div class="font-bold text-xl">PAST BOARD 1 (UG)</div>
+                <p class="text-gray-500 text-xs font-mono mt-2">Electrical Safety & Code</p>
+            </div>
+
+            <div class="cyber-card p-8 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-100" onclick="loadQuiz('ug2')">
+                <div class="text-4xl mb-4 text-[#00f3ff]">🔬</div>
+                <div class="font-bold text-xl">PAST BOARD 2 (UG)</div>
+                <p class="text-gray-500 text-xs font-mono mt-2">Thermo & Mechanics</p>
+            </div>
+
+            <div class="cyber-card p-8 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-200" onclick="loadQuiz('ug3')">
+                <div class="text-4xl mb-4 text-[#00f3ff]">🏗️</div>
+                <div class="font-bold text-xl">PAST BOARD 3 (UG)</div>
+                <p class="text-gray-500 text-xs font-mono mt-2">Materials & Sciences</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="level-3-undergrounds" class="menu-overlay hidden">
+        <button onclick="backToUndergrounds()" class="back-btn">← BACK</button>
+        <h2 id="level-3-title" class="menu-header text-[#00f3ff] mt-12 md:mt-0">SELECT SUBJECT</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl px-4 pb-20">
+            <div class="cyber-card p-8 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop" onclick="openLevel3Subject('MATH')">
+                <div class="text-4xl mb-4 text-[#00f3ff]">📐</div>
+                <div class="font-bold text-xl">MATH</div>
+            </div>
+            <div class="cyber-card p-8 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-100" onclick="openLevel3Subject('ESAS')">
+                <div class="text-4xl mb-4 text-[#00f3ff]">⚙️</div>
+                <div class="font-bold text-xl">ESAS</div>
+            </div>
+            <div class="cyber-card p-8 rounded-lg text-center cursor-pointer hover:border-[#00f3ff] animate-pop delay-200" onclick="openLevel3Subject('EE')">
+                <div class="text-4xl mb-4 text-[#00f3ff]">⚡</div>
+                <div class="font-bold text-xl">EE</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="submenu-taypi" class="menu-overlay hidden">
+        <button onclick="backToLevel1()" class="back-btn">← BACK</button>
+        <h2 class="menu-header text-[#ff00ff] mt-12 md:mt-0">T-AY-PI MODULES</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl px-4 pb-20">
+            <div onclick="loadQuiz('math')" class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff00ff] animate-pop">
+                <div class="text-4xl mb-2 group-hover:text-[#ff00ff]">📐</div><h3 class="font-bold text-lg">MATHEMATICS</h3><span class="text-xs text-[#ff00ff] border border-[#ff00ff] px-2 rounded mt-2 inline-block">50 Qs</span>
+            </div>
+            <div onclick="loadQuiz('esas')" class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff00ff] animate-pop delay-100">
+                <div class="text-4xl mb-2 group-hover:text-[#ff00ff]">⚙️</div><h3 class="font-bold text-lg">ESAS</h3><span class="text-xs text-[#ff00ff] border border-[#ff00ff] px-2 rounded mt-2 inline-block">50 Qs</span>
+            </div>
+            <div onclick="openContent('T-AY-PI/EE')" class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff00ff] animate-pop delay-200">
+                <div class="text-4xl mb-2">⚡</div><h3 class="font-bold text-lg">EE</h3><span class="text-xs text-[#ff00ff] border border-[#ff00ff] px-2 rounded mt-2 inline-block">OPEN</span>
+            </div>
+            <div onclick="openContent('T-AY-PI/OTHER')" class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff00ff] animate-pop delay-300">
+                <div class="text-4xl mb-2">📂</div><h3 class="font-bold text-lg">OTHER</h3><span class="text-xs text-[#ff00ff] border border-[#ff00ff] px-2 rounded mt-2 inline-block">OPEN</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="submenu-exhale" class="menu-overlay hidden">
+        <button onclick="backToLevel1()" class="back-btn">← BACK</button>
+        <h2 class="menu-header text-[#00ff9d] mt-12 md:mt-0">EXHALE FILE</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl px-4 pb-20">
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00ff9d] animate-pop" onclick="openContent('EXHALE FILE/NOTES')">
+                <div class="text-4xl mb-4 text-[#00ff9d]">📝</div><div class="font-bold text-xl">NOTES</div>
+            </div>
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00ff9d] animate-pop delay-100" onclick="openContent('EXHALE FILE/PRACTICE QUIZ')">
+                <div class="text-4xl mb-4 text-[#00ff9d]">🧠</div><div class="font-bold text-xl">PRACTICE QUIZ</div>
+            </div>
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#00ff9d] animate-pop delay-200" onclick="openContent('EXHALE FILE/EXAM')">
+                <div class="text-4xl mb-4 text-[#00ff9d]">⏱️</div><div class="font-bold text-xl">EXAM</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="submenu-pawer" class="menu-overlay hidden">
+        <button onclick="backToLevel1()" class="back-btn">← BACK</button>
+        <h2 class="menu-header text-[#ff0055] mt-12 md:mt-0">PAWER-LAYN FILE</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl px-4 pb-20">
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff0055] animate-pop" onclick="openContent('PAWER-LAYN FILE/NOTES')">
+                <div class="text-4xl mb-4 text-[#ff0055]">📝</div><div class="font-bold text-xl">NOTES</div>
+            </div>
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff0055] animate-pop delay-100" onclick="openContent('PAWER-LAYN FILE/PRACTICE QUIZ')">
+                <div class="text-4xl mb-4 text-[#ff0055]">🧠</div><div class="font-bold text-xl">PRACTICE QUIZ</div>
+            </div>
+            <div class="cyber-card p-6 rounded-lg text-center cursor-pointer hover:border-[#ff0055] animate-pop delay-200" onclick="openContent('PAWER-LAYN FILE/EXAM')">
+                <div class="text-4xl mb-4 text-[#ff0055]">⏱️</div><div class="font-bold text-xl">EXAM</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden opacity-0 transition-opacity duration-500">
+        <header class="sticky top-0 z-50 backdrop-blur-md border-b border-gray-800 bg-[#0a0a0f]/95 shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+                <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+                    <button onclick="backToQuizMenu()" class="text-gray-500 hover:text-white font-mono text-xs border border-gray-700 px-2 py-1 rounded">← MODULES</button>
+                    <h1 class="text-lg md:text-2xl font-bold tracking-wider text-white">
+                        <span id="active-module-title" class="text-[#00f3ff]">BOARD</span> <span class="text-xs border border-gray-600 px-1 rounded text-gray-400">ACTIVE</span>
+                    </h1>
+                </div>
+                <div class="w-full md:w-auto overflow-x-auto">
+                    <div class="mode-switch mx-auto md:mx-0 min-w-max">
+                        <div id="btn-review" class="mode-btn active" onclick="setMode('review')">STUDY MODE</div>
+                        <div id="btn-practice" class="mode-btn inactive" onclick="setMode('practice')">PRACTICE MODE</div>
+                        <div id="btn-exam" class="mode-btn inactive" onclick="setMode('exam')">EXAM MODE</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 py-6 pb-24">
+            <div id="practice-dashboard" class="hidden mb-6 p-4 rounded bg-gray-900/50 border-l-4 border-purple-500 flex justify-between items-center">
+                <div>
+                    <h2 class="text-purple-400 font-bold uppercase text-xs md:text-sm mb-1">PRACTICE MODE ACTIVE</h2>
+                    <p class="text-gray-400 text-[10px] md:text-xs">Tap for instant feedback.</p>
+                </div>
+                <button onclick="resetPractice()" class="px-3 py-1 bg-purple-900/50 hover:bg-purple-800 text-purple-200 text-xs font-bold rounded border border-purple-500/30">RESET</button>
+            </div>
+
+            <div id="exam-dashboard" class="hidden mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="cyber-card p-4 rounded flex flex-col justify-center bg-gray-900/50 border-yellow-500/30">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-gray-400 text-xs uppercase">Exam Status</div>
+                        <div id="exam-status" class="text-sm font-bold text-yellow-500">IN PROGRESS</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="submitExam()" id="submit-btn" class="flex-1 px-4 py-2 bg-[#00f3ff] hover:bg-[#00c2cc] text-black font-bold rounded shadow-[0_0_10px_rgba(0,243,255,0.3)] transition-all text-sm uppercase">Submit</button>
+                        <button onclick="resetExam()" id="reset-btn" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded transition-all text-sm uppercase">Reset</button>
+                    </div>
+                </div>
+                <div class="cyber-card p-4 rounded bg-gray-900/50 flex flex-col justify-center">
+                    <div class="text-gray-400 text-xs uppercase">Score</div>
+                    <div class="text-3xl font-bold text-white font-mono flex items-end gap-2">
+                        <span id="score-display" class="text-[#00f3ff]">--</span> 
+                        <span id="total-score" class="text-gray-500 text-lg mb-1">/ --</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="questions-container" class="grid grid-cols-1 gap-6"></div>
+        </div>
+    </div>
+
+
+    <!-- GLOBAL CONTROLS (shown after login) -->
+    <div id="global-controls" class="hidden fixed top-4 right-4 z-[10050] flex flex-wrap gap-2 justify-end">
+        <div id="whoami-pill" class="px-3 py-2 rounded border border-gray-700 bg-black/60 text-gray-200 text-xs font-mono">
+            USER: <span id="whoami-username" class="text-[#00f3ff] font-bold">--</span>
+        </div>
+        <button id="btn-open-archives" class="px-3 py-2 rounded border border-gray-700 bg-black/60 hover:bg-gray-900 text-gray-200 text-xs font-mono tracking-widest">
+            📦 ARCHIVES
+        </button>
+        <button id="btn-open-admin" class="hidden px-3 py-2 rounded border border-[#ff00ff]/40 bg-black/60 hover:bg-gray-900 text-[#ff00ff] text-xs font-mono tracking-widest">
+            ⚙️ ADMIN
+        </button>
+        <button id="btn-logout" class="px-3 py-2 rounded border border-red-500/40 bg-black/60 hover:bg-gray-900 text-red-300 text-xs font-mono tracking-widest">
+            ⏻ LOGOUT
+        </button>
+    </div>
+
+    <!-- CONTENT BROWSER (folders / quiz sets / PDFs) -->
+    <div id="content-browser" class="hidden menu-overlay" style="z-index: 10020; justify-content: flex-start;">
+        <button id="content-back-btn" class="back-btn">← BACK</button>
+        <h2 id="content-title" class="menu-header mt-12 md:mt-0">CONTENT</h2>
+
+        <div class="w-full max-w-4xl mx-auto px-4 pb-24">
+            <div class="text-xs font-mono text-gray-400 mb-4">
+                PATH: <span id="content-breadcrumb" class="text-[#00f3ff]">/</span>
+            </div>
+
+            <div id="content-empty" class="hidden cyber-card p-6 rounded-lg text-center text-gray-400 font-mono">
+                This folder is empty. Ask the admin to upload a PDF / create a quiz set / create folders.
+            </div>
+
+            <div id="content-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+
+    <!-- PDF VIEWER -->
+    <div id="pdf-viewer" class="hidden menu-overlay" style="z-index: 10030; justify-content: flex-start; padding: 0;">
+        <button id="pdf-back-btn" class="back-btn">← BACK</button>
+        <div class="w-full h-full pt-16">
+            <div class="w-full max-w-6xl mx-auto px-4 pb-3 flex items-center justify-between gap-3">
+                <h2 id="pdf-title" class="text-white font-bold tracking-widest text-sm md:text-lg">PDF</h2>
+                <a id="pdf-download" class="text-xs font-mono text-[#00ff9d] border border-[#00ff9d]/40 px-3 py-2 rounded hover:bg-black/50" download>
+                    DOWNLOAD
+                </a>
+            </div>
+            <div class="w-full h-[80vh] max-w-6xl mx-auto px-4 pb-20">
+                <iframe id="pdf-frame" class="w-full h-full rounded border border-gray-800 bg-black" title="PDF Viewer"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="admin-panel" class="hidden menu-overlay" style="z-index: 10040; justify-content: flex-start;">
+        <button id="admin-close-btn" class="back-btn">← BACK</button>
+        <h2 class="menu-header text-[#ff00ff] mt-12 md:mt-0">ADMIN PANEL</h2>
+
+        <div class="w-full max-w-6xl mx-auto px-4 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <!-- Sidebar -->
+                <div class="cyber-card p-4 rounded-lg border border-[#ff00ff]/20">
+                    <div class="font-bold text-sm tracking-widest text-[#ff00ff] mb-3">NAVIGATION</div>
+                    <div class="flex flex-col gap-2">
+                        <button class="admin-nav-btn px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-left text-xs font-mono" data-tab="content">📦 Content</button>
+                        <button class="admin-nav-btn px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-left text-xs font-mono" data-tab="accounts">👥 Accounts</button>
+                        <button class="admin-nav-btn px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-left text-xs font-mono" data-tab="logs">🛰️ Online & Logs</button>
+                        <button class="admin-nav-btn px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-left text-xs font-mono" data-tab="backup">💾 Backup</button>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-800">
+                        <button id="admin-logout-btn" class="w-full px-3 py-2 rounded border border-red-500/40 bg-black/30 hover:bg-black/60 text-red-300 text-xs font-mono tracking-widest">
+                            ⏻ LOGOUT
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main -->
+                <div class="lg:col-span-3 space-y-4">
+
+                    <!-- CONTENT TAB -->
+                    <div id="admin-tab-content" class="admin-tab cyber-card p-5 rounded-lg border border-gray-700 bg-black/30">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                            <div>
+                                <div class="font-bold tracking-widest text-white">CONTENT MANAGER</div>
+                                <div class="text-xs font-mono text-gray-400">Create quiz sets, upload PDFs, and create archive folders anywhere.</div>
+                            </div>
+                        </div>
+
+                        <!-- ADMIN SEARCH -->
+                        <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20 mb-6">
+                            <div class="flex items-center justify-between gap-3 mb-2">
+                                <div class="font-bold text-sm tracking-widest text-white">SEARCH</div>
+                                <button id="admin-search-clear" class="px-3 py-1 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 text-[10px] font-mono">CLEAR</button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input id="admin-search-input" class="w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Search folders, quiz sets, PDFs...">
+                                <div class="text-[10px] font-mono text-gray-500 flex items-center">Tip: click a result to open/select.</div>
+                            </div>
+                            <div id="admin-search-results" class="mt-3 space-y-2 text-xs font-mono text-gray-300 max-h-[40vh] overflow-y-auto"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+                            <label class="cyber-card p-3 rounded border border-gray-800 flex items-center gap-3 cursor-pointer">
+                                <input type="radio" name="content-type" value="quiz" checked>
+                                <div>
+                                    <div class="font-bold text-xs tracking-widest">QUIZ SET</div>
+                                    <div class="text-[10px] font-mono text-gray-400">Question builder + JSON import</div>
+                                </div>
+                            </label>
+                            <label class="cyber-card p-3 rounded border border-gray-800 flex items-center gap-3 cursor-pointer">
+                                <input type="radio" name="content-type" value="notes">
+                                <div>
+                                    <div class="font-bold text-xs tracking-widest">NOTES (PDF)</div>
+                                    <div class="text-[10px] font-mono text-gray-400">Upload & attach PDFs</div>
+                                </div>
+                            </label>
+                            <label class="cyber-card p-3 rounded border border-gray-800 flex items-center gap-3 cursor-pointer">
+                                <input type="radio" name="content-type" value="archive">
+                                <div>
+                                    <div class="font-bold text-xs tracking-widest">ARCHIVE FOLDER</div>
+                                    <div class="text-[10px] font-mono text-gray-400">Create folders in any path</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Common: target path -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <div class="text-xs font-mono text-gray-400 mb-1">Target folder path</div>
+                                <input id="admin-target-path" class="w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="e.g. UNDERGROUNDS/FORMULAS">
+                                <div class="text-[10px] font-mono text-gray-500 mt-1">Tip: you can type ANY path; folders will be auto-created.</div>
+                            </div>
+                            <div>
+                                <div class="text-xs font-mono text-gray-400 mb-1">Quick pick</div>
+                                <select id="admin-path-picker" class="w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono">
+                                    <option value="">-- Select a common folder --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- QUIZ UI -->
+                        <div id="admin-content-quiz" class="space-y-4">
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-3">Create / Select Quiz Set</div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <input id="quiz-title" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Quiz set title (e.g. PAST BOARD 4)">
+                                    <button id="btn-create-quizset" class="px-3 py-2 rounded bg-[#ff00ff] hover:bg-[#d400d4] text-black font-bold text-xs tracking-widest">CREATE SET</button>
+                                    <select id="quizset-picker" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono">
+                                        <option value="">-- Select existing set --</option>
+                                    </select>
+                                </div>
+                                <div class="text-[10px] font-mono text-gray-500 mt-2">Create set in the Target folder above, or select a set to edit/import questions.</div>
+                            </div>
+
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-2">Quiz Set Tools</div>
+                                <div class="text-[10px] font-mono text-gray-500 mb-3">Move or delete the selected quiz set. (Built-in sets are protected.)</div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <input id="set-move-path" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-xs font-mono" placeholder="Move to folder path (blank = Target path)">
+                                    <button id="btn-move-quizset" class="px-3 py-2 rounded border border-[#00ff9d]/40 bg-black/30 hover:bg-black/60 text-[#00ff9d] font-bold text-xs tracking-widest">MOVE SELECTED</button>
+                                    <button id="btn-sync-move-path" class="px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">USE TARGET PATH</button>
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-3 mt-3">
+                                    <label class="text-xs font-mono text-gray-400 flex items-center gap-2">
+                                        <input id="delete-questions-too" type="checkbox"> Delete questions too
+                                    </label>
+                                    <button id="btn-delete-quizset" class="ml-auto px-3 py-2 rounded border border-red-500/40 bg-black/30 hover:bg-black/60 text-red-300 font-bold text-xs tracking-widest">DELETE SELECTED</button>
+                                </div>
+
+                                <div id="set-tools-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                            </div>
+
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+                                    <div>
+                                        <div class="font-bold text-sm tracking-widest text-white">Import Questions (.json)</div>
+                                        <div class="text-[10px] font-mono text-gray-500">Works for already-created questions.</div>
+                                    </div>
+                                    <div class="text-[10px] font-mono text-gray-400">Format is in README_ADMIN_PANEL.md</div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <input id="json-file" type="file" accept=".json,application/json" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-xs font-mono">
+                                    <button id="btn-import-json" class="px-3 py-2 rounded border border-[#00ff9d]/40 bg-black/30 hover:bg-black/60 text-[#00ff9d] font-bold text-xs tracking-widest">
+                                        IMPORT JSON
+                                    </button>
+                                    <button id="btn-export-json" class="px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">
+                                        EXPORT SELECTED
+                                    </button>
+                                </div>
+                                <div id="json-import-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                            </div>
+
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-3">Question Builder</div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <input id="q-topic" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Topic (optional)">
+                                    <select id="q-key" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono">
+                                        <option value="a">Correct: A</option>
+                                        <option value="b">Correct: B</option>
+                                        <option value="c">Correct: C</option>
+                                        <option value="d">Correct: D</option>
+                                    </select>
+                                </div>
+
+                                <textarea id="q-text" rows="3" class="mt-3 w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Question text (supports MathJax)"></textarea>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                                    <input id="opt-a" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Option A">
+                                    <input id="opt-b" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Option B">
+                                    <input id="opt-c" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Option C">
+                                    <input id="opt-d" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Option D">
+                                </div>
+
+                                <textarea id="q-soln" rows="4" class="mt-3 w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Solution / Explanation (optional, supports HTML + MathJax)"></textarea>
+                                <textarea id="q-caltech" rows="3" class="mt-3 w-full px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Calculator Technique (optional)"></textarea>
+
+                                <div class="flex flex-wrap gap-2 mt-4">
+                                    <button id="btn-add-question" class="px-4 py-2 rounded bg-[#00f3ff] hover:bg-[#00c2cc] text-black font-bold text-xs tracking-widest">
+                                        ADD QUESTION
+                                    </button>
+                                    <button id="btn-clear-question" class="px-4 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">
+                                        CLEAR
+                                    </button>
+                                    <div class="ml-auto text-xs font-mono text-gray-400">
+                                        Questions in set: <span id="q-count" class="text-[#00ff9d] font-bold">0</span>
+                                    </div>
+                                </div>
+
+                                <div id="q-builder-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                            </div>
+                        </div>
+
+                        <!-- NOTES UI -->
+                        <div id="admin-content-notes" class="hidden space-y-4">
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-2">Upload PDF Notes</div>
+                                <div class="text-[10px] font-mono text-gray-500 mb-3">Upload works in EXHALE FILE / PAWER-LAYN FILE / UNDERGROUNDS FORMULAS / CALCULATOR TECHNIQUES / T-AY-PI OTHER (and ANY folder you type).</div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <input id="pdf-file" type="file" accept="application/pdf,.pdf" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-xs font-mono">
+                                    <input id="pdf-title-input" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-xs font-mono" placeholder="Display title (optional)">
+                                    <button id="btn-upload-pdf" class="px-3 py-2 rounded border border-[#00ff9d]/40 bg-black/30 hover:bg-black/60 text-[#00ff9d] font-bold text-xs tracking-widest">
+                                        UPLOAD & ATTACH
+                                    </button>
+                                </div>
+                                <div id="pdf-upload-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                            </div>
+
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-3">PDFs in selected folder</div>
+                                <div id="admin-pdf-list" class="space-y-2 text-xs font-mono text-gray-300"></div>
+                            </div>
+                        </div>
+
+                        <!-- ARCHIVE UI -->
+                        <div id="admin-content-archive" class="hidden space-y-4">
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-2">Create Archive Folder</div>
+                                <div class="text-[10px] font-mono text-gray-500 mb-3">Creates a folder under the Target path. Works for ANY category/subcategory/sub-subcategory.</div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <input id="archive-folder-name" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Folder name (e.g. CHAPTER 1)">
+                                    <button id="btn-create-folder" class="px-3 py-2 rounded bg-[#ff00ff] hover:bg-[#d400d4] text-black font-bold text-xs tracking-widest">
+                                        CREATE ARCHIVE FOLDER
+                                    </button>
+                                    <button id="btn-open-target" class="px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">
+                                        OPEN TARGET
+                                    </button>
+                                </div>
+                                <div id="folder-create-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                            </div>
+
+                            <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                                <div class="font-bold text-sm tracking-widest text-white mb-2">Folder Tools</div>
+                                <div class="text-[10px] font-mono text-gray-500 mb-3">Rename / move / delete the folder in <b>Target folder path</b>. Delete is recursive.</div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <input id="folder-new-name" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-xs font-mono" placeholder="New folder name (rename)">
+                                    <button id="btn-rename-folder" class="px-3 py-2 rounded border border-[#00f3ff]/40 bg-black/30 hover:bg-black/60 text-[#00f3ff] font-bold text-xs tracking-widest">RENAME</button>
+                                    <button id="btn-rename-help" class="px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">HOW IT WORKS</button>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+                                    <input id="folder-move-parent" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-xs font-mono" placeholder="New parent path (move)">
+                                    <button id="btn-move-folder" class="px-3 py-2 rounded border border-[#00ff9d]/40 bg-black/30 hover:bg-black/60 text-[#00ff9d] font-bold text-xs tracking-widest">MOVE</button>
+                                    <button id="btn-move-help" class="px-3 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest">USE ROOT</button>
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-3 mt-3">
+                                    <label class="text-xs font-mono text-gray-400 flex items-center gap-2">
+                                        <input id="folder-delete-questions-too" type="checkbox"> Also delete quiz questions
+                                    </label>
+                                    <button id="btn-delete-folder" class="ml-auto px-3 py-2 rounded border border-red-500/40 bg-black/30 hover:bg-black/60 text-red-300 font-bold text-xs tracking-widest">DELETE FOLDER</button>
+                                </div>
+
+                                <div id="folder-tools-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ACCOUNTS TAB -->
+                    <div id="admin-tab-accounts" class="admin-tab hidden cyber-card p-5 rounded-lg border border-gray-700 bg-black/30">
+                        <div class="flex items-center justify-between gap-3 mb-4">
+                            <div>
+                                <div class="font-bold tracking-widest text-white">ACCOUNTS</div>
+                                <div class="text-xs font-mono text-gray-400">Create / delete user accounts. Default client (EE) was removed.</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <input id="new-user" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Username">
+                            <input id="new-pass" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono" placeholder="Password">
+                            <select id="new-role" class="px-3 py-2 rounded bg-black/40 border border-gray-700 text-gray-200 text-sm font-mono">
+                                <option value="user">Role: user</option>
+                                <option value="admin">Role: admin</option>
+                            </select>
+                        </div>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <button id="btn-create-account" class="px-4 py-2 rounded bg-[#00f3ff] hover:bg-[#00c2cc] text-black font-bold text-xs tracking-widest">CREATE ACCOUNT</button>
+                            <div id="account-msg" class="text-xs font-mono text-gray-400 self-center"></div>
+                        </div>
+
+                        <div class="mt-6 cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                            <div class="font-bold text-sm tracking-widest text-white mb-2">Existing accounts</div>
+                            <div id="accounts-list" class="space-y-2 text-xs font-mono text-gray-300"></div>
+                        </div>
+                    </div>
+
+                    <!-- LOGS TAB -->
+                    <div id="admin-tab-logs" class="admin-tab hidden cyber-card p-5 rounded-lg border border-gray-700 bg-black/30">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                            <div>
+                                <div class="font-bold tracking-widest text-white">ONLINE & LOGS</div>
+                                <div class="text-xs font-mono text-gray-400">Shows users online + what they are doing (local-only tracking).</div>
+                            </div>
+                            <div class="text-xs font-mono text-gray-300">
+                                ONLINE: <span id="online-count" class="text-[#00ff9d] font-bold">0</span>
+                            </div>
+                        </div>
+
+                        <div class="cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                            <div class="font-bold text-sm tracking-widest text-white mb-2">Online users</div>
+                            <div class="text-[10px] font-mono text-gray-500 mb-3">
+                                Note: On a static website, this can only track sessions in the <b>same device/browser</b> (multiple tabs). For real global online users, you need a server.
+                            </div>
+                            <div id="online-list" class="space-y-2 text-xs font-mono text-gray-300"></div>
+                        </div>
+
+                        <div class="mt-4 cyber-card p-4 rounded border border-gray-800 bg-black/20">
+                            <div class="flex items-center justify-between gap-3 mb-2">
+                                <div class="font-bold text-sm tracking-widest text-white">Activity logs</div>
+                                <button id="btn-clear-logs" class="px-3 py-2 rounded border border-red-500/40 bg-black/30 hover:bg-black/60 text-red-300 text-xs font-mono">CLEAR</button>
+                            </div>
+                            <div id="logs-list" class="space-y-2 text-xs font-mono text-gray-300 max-h-[40vh] overflow-y-auto"></div>
+                        </div>
+                    </div>
+
+                    <!-- BACKUP TAB -->
+                    <div id="admin-tab-backup" class="admin-tab hidden cyber-card p-5 rounded-lg border border-gray-700 bg-black/30">
+                        <div class="font-bold tracking-widest text-white mb-2">BACKUP</div>
+                        <div class="text-xs font-mono text-gray-400 mb-4">Export / import ALL local data (accounts, folders, quiz sets, questions). PDFs are NOT included in this backup (because they are stored in IndexedDB).</div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button id="btn-export-all" class="px-4 py-2 rounded border border-[#00ff9d]/40 bg-black/30 hover:bg-black/60 text-[#00ff9d] font-bold text-xs tracking-widest">EXPORT ALL (JSON)</button>
+                            <label class="px-4 py-2 rounded border border-gray-700 bg-black/30 hover:bg-black/60 text-gray-200 font-bold text-xs tracking-widest cursor-pointer text-center">
+                                IMPORT ALL (JSON)
+                                <input id="all-import-file" type="file" accept=".json,application/json" class="hidden">
+                            </label>
+                        </div>
+                        <div id="backup-msg" class="mt-2 text-xs font-mono text-gray-400"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
